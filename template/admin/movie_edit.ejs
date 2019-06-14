@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('components/head.ejs') %>
+    <style>
+        .layui-form-label {
+            width: 126px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+
+                        <form class="layui-form" method="POST" enctype="multipart/form-data"
+                            action="/admin/movie_edit/<%= ID %>" lay-filter="formMovie" id="formMovie">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">电影名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="moviename" required lay-verify="moviename"
+                                        placeholder="请输入电影名称" autocomplete="off" class="layui-input"
+                                        value="<%= mname %>">
+                                </div>
+                                <div class="layui-input-block">
+                                    <input type="text" id="oldname" name="oldname" lay-verify="oldname"
+                                        autocomplete="off" class="layui-input" value="<%= mname %>" disabled="">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">导演</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="maker" required lay-verify="maker" placeholder="请输入导演"
+                                        autocomplete="off" class="layui-input" value="<%= maker %>">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">电影类型</label>
+                                <div class="layui-input-inline">
+                                    <select name="movietype" lay-verify="movietype">
+                                        <option value="0"></option>
+                                        <% for(let item in movieType){ %>
+                                        <option value="<%= movieType[item].ID %>"><%= movieType[item].tname %></option>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">视频上传</label>
+                                <div class="layui-input-inline">
+                                    <input type="file" name="video" id="video">
+                                </div>
+                                <div class="input-form-block">
+                                    <p><%= url %></p>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">电影图片</label>
+                                <div class="layui-upload layui-input-inline">
+                                    <div class="layui-upload">
+                                        <input type="file" name="img" id="imgfile">
+                                        <div class="layui-upload-list">
+                                            <img class="layui-upload-img" id="img" style="width: 92px; height: 92px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-upload layui-input-block">
+                                    <div class="layui-upload">
+                                        <div class="layui-upload-list">
+                                            <img class="layui-upload-img" id="img" src="/<%= img %>"
+                                                style="width: 92px; height: 92px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">电影上映时间</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" class="layui-input" name="onlinetime" id="time"
+                                        placeholder="年-月-日 时-分-秒" value="<%= onlinetime %>">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">播放时长</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="playtimes" required lay-verify="playtimes"
+                                        placeholder="请输入播放时长" autocomplete="off" class="layui-input"
+                                        value="<%= playtimes %>">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否为首页推荐</label>
+                                <div class="layui-input-block">
+                                    <% if(isrecommend == 1) {%>
+                                    <input type="radio" name="rec" value="1" title="是" checked>
+                                    <input type="radio" name="rec" value="0" title="否">
+                                    <% }else{ %>
+                                    <input type="radio" name="rec" value="1" title="是">
+                                    <input type="radio" name="rec" value="0" title="否" checked>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">电影简介</label>
+                                <div class="layui-input-inline">
+                                    <textarea rows="10" cols="50" id="desc" name="desc"
+                                        placeholder="请输入电影简介"><%= brief %></textarea>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" id="formBtn" lay-filter="formBtn" lay-submit>立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var pagesize;
+        layui.use(['form', 'laydate', 'layedit', 'upload'], function () {
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var layedit = layui.layedit;
+            var upload = layui.upload;
+            //刷新界面 所有元素
+            form.render();
+            laydate.render({
+                elem: '#time'
+                , type: 'datetime'
+            });
+            form.verify({
+                moviename: function (val) {
+                    if (val.length == '') {
+                        return '电影名称不能为空';
+                    }
+                },
+                maker: function (val) {
+                    if (val.length == '') {
+                        return '导演不能为空';
+                    }
+                },
+                movietype: function (val) {
+                    if (val.length == '') {
+                        return '电影类型不能不选';
+                    }
+                },
+                playtimes: function (val) {
+                    if (val.length == '') {
+                        return '播放时长不能为空';
+                    }
+                },
+            });
+
+        });
+        var img = document.getElementById('img');
+        document.getElementById('imgfile').addEventListener('change', function () {
+            var imgreg = /^.jpg|.jpeg|.png|.gif$/
+            var imgfile = this.files[0];
+            if (typeof (FileReader != 'undefined')) {//浏览器支持FileReader对象时
+                // 确认选择的文件是图片
+                if (imgfile.type.indexOf("image") == 0 && !imgreg.test(imgfile.name)) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(imgfile);
+                    reader.onload = function (e) {
+                        // 图片base64化
+                        var newUrl = this.result;
+                        img.src = "" + newUrl;
+                    };
+                } else {
+                    alert("请使用jpg|jpeg|png|gif等格式的图片");
+                    this.value = "";
+                }
+            }
+        }, false);
+        document.getElementById('video').addEventListener('change', function () {
+            var videofile = this.files[0]
+            var videoreg = /^.AVI|.mov|.rmvb|.rm|.FLV|.mp4|.3GP$/
+            if (videofile.type.indexOf("video") == 0 && !videoreg.test(videofile.value)) {//浏览器支持FileReader对象时
+
+            } else {
+                alert("请使用AVI|mov|rmvb|rm|FLV|mp4|3GP等格式的视频");
+                this.value = "";
+            }
+
+        }, false)
+
+        document.getElementById('formBtn').addEventListener('click', function () {
+                document.getElementById('formMovie').submit();
+            if (confirm('修改成功')) {
+                // 获得frame索引
+                var index = parent.layer.getFrameIndex(window.name);
+                //关闭当前frame
+                parent.layer.close(index);
+                parent.layui.table.reload('moivelist');//重载父页表格，参数为表格ID
+                location.reload();
+            }
+        }, false);
+
+    </script>
+
+</body>
+
+</html>

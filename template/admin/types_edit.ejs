@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    <%- include('components/head.ejs') %>
+</head>
+
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row">
+            <form class="layui-form">
+
+                <div class="layui-form-item">
+                    <label for="typename" class="layui-form-label">
+                        原类型名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="typename" name="typename" lay-verify="typename"
+                            autocomplete="off" class="layui-input" value="<%= data[0].tname %>" disabled="">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="retypename" class="layui-form-label">
+                        <span class="x-red">*</span>类型名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="retypename" name="retypename" lay-verify="retypename"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label for="L_repass" class="layui-form-label"></label>
+                    <button class="layui-btn" lay-filter="add" lay-submit="">修改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        layui.use(['form', 'layer'], function () {
+            $ = layui.jquery;
+            var form = layui.form,
+                table = layui.table,
+                layer = layui.layer;
+
+            //自定义验证规则
+            form.verify({
+                retypename: function (value) {
+                    if (value.length == '') {
+                        return '类型名称不能为空';
+                    }
+                },
+            });
+
+            //监听提交
+            form.on('submit(add)', function (data) {
+                //发异步，把数据提交给php
+                let typedata = data.field;
+                $.ajax({
+                    url: '/admin/types_edit',
+                    type: 'post',
+                    data: {
+                        typename: typedata.typename,
+                        retypename: typedata.retypename
+                    },
+                    success: function (data) {
+                        let d = JSON.parse(data)
+                        layer.alert(d.msg)
+                        if (d.state !== 1) {
+                            layer.alert(d.msg, {
+                                yes: function () {
+                                    // 获得frame索引
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    //关闭当前frame
+                                    parent.layer.close(index);
+
+                                }
+                            })
+
+                        } else {
+                            // console.log(d.msg)
+                            layer.alert(d.msg, {
+                                icon: 6,
+                                yes: function () {
+                                    // 获得frame索引
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    //关闭当前frame
+                                    // parent.layer.close(index);
+
+                                    parent.layui.table.reload('typelist');//重载父页表格，参数为表格ID
+                                    parent.layer.close(index);
+
+                                }
+                            });
+
+                        }
+
+                    }
+                })
+                return false;
+
+            });
+
+        });
+    </script>
+    <script>
+        var _hmt = _hmt || []; (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<%- include('components/head.ejs') %>
+</head>
+
+<body class="boxed">
+	<div class="body">
+		
+		<!-- 头部 -->
+		<%- include('components/header.ejs') %>
+
+		<div class="container">
+			<!-- 轮播图 -->
+			<%- include('components/banner.ejs') %>
+
+			<!--111-->
+			<div class="row-fluid">
+
+				<div class="span12">
+
+					<div class="titleborder">
+
+						<div>影院热播&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:red; font-size:10px; font-weight:100">今日更新19></span>
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="row-fluid recent-posts">
+				<% for(let item in displayList){ %>
+				<div class="span3">
+
+					<article>
+
+						<img src="/<%= displayList[item].img %>" alt="" class="imgOpa">
+
+						<div class="date">
+
+							<span class="day">15</span>
+
+							<span class="month">Jan</span>
+
+						</div>
+
+						<h4><a href="bloghome.html"><%= displayList[item].mname %></a></h4>
+
+						<p>
+
+							<%= displayList[item].brief %><a href="bloghome.html" class="read-more">read more
+								<i class="icon-angle-right"></i></a>
+
+						</p>
+
+					</article>
+
+				</div>
+				<% } %>
+
+			</div>
+			<!--111-->
+			<!--222-->
+			<div class="row-fluid">
+				<div class="span12">
+					<div class="titleborder">
+						<div>
+							精彩连轴看&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:red; font-size:10px; font-weight:100">今日更新19></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid recent-posts">
+				<% for(let item in recommendList){ %>
+				<div class="span3">
+					<article>
+						<img src="/<%= recommendList[item].img %>" alt="" class="imgOpa">
+						<div class="date">
+							<span class="day">6</span>
+							<span class="month">Feb</span>
+						</div>
+						<h4><a href="#"><%= recommendList[item].mname %></a></h4>
+						<p>
+							<%= recommendList[item].brief %>
+							<a href="#" class="read-more">read more <i class="icon-angle-right"></i></a>
+						</p>
+					</article>
+				</div>
+				<% } %>
+
+			</div>
+			<!--222-->
+			<!--333-->
+			<div class="row-fluid">
+				<div class="span12">
+					<div class="titleborder">
+						<div>即将上映&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:red; font-size:10px; font-weight:100">今日更新19></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid recent-posts">
+				<% for(let item in newList){ %>
+				<div class="span3">
+					<article>
+						<img src="/<%= newList[item].img %>" alt="" class="imgOpa">
+						<div class="date">
+							<span class="day">15</span>
+							<span class="month">Jan</span>
+						</div>
+						<h4><a href="#"><%= newList[item].mname %></a></h4>
+						<p>
+								<%= newList[item].brief %><a
+								href="#" class="read-more">read more <i class="icon-angle-right"></i></a>
+						</p>
+					</article>
+				</div>
+				<% } %>
+			</div>
+		</div>
+		<div class="footer footerdark">
+			<div class="text-center wraptotop">
+				<a class="totop"><i class="icon-chevron-up"></i></a>
+			</div>
+			<div class="container">
+				<div class="row-fluid">
+					<div class="span4">
+						<h1 style=" font-size:16px; font-weight:bold"><i class="icon-heart"></i>关于我们</h1>
+						<hr>
+						<p class="zmlogo">MoviesHome</p>
+					</div>
+					<div class="span4">
+						<h1 style=" font-size:16px; font-weight:bold">播放记录</h1>
+						<hr>
+						<div>盗墓笔记[电脑]观看至42分钟</div>
+						<div>克拉恋人[电脑]观看至16分钟</div>
+					</div>
+					<div class="span4">
+						<h1 style=" font-size:16px; font-weight:bold">意见反馈</h1>
+						<hr>
+						<div class="done">
+							<div class="alert alert-success">
+								<button type="button" class="close" data-dismiss="alert">×</button>
+								Your message has been sent. Thank you!
+							</div>
+						</div>
+						<form method="post" action="contact.php" id="contactform">
+							<div class="form">
+								<div class="controls controls-row">
+									<input class="span6" type="text" name="phone" placeholder="手机号码">
+									<input class="span6" type="text" name="email" placeholder="电子邮箱">
+								</div>
+								<div class="controls">
+									<textarea class="span12" name="comment" rows="4" placeholder="意见建议"></textarea>
+								</div>
+								<input type="submit" id="submit" class="btn" value="提交反馈">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 2nd row -->
+		<div class="footerbottom footerbottomdark">
+			<div class="container">
+				<div class="row-fluid">
+					<!-- left -->
+					<div class="span4 smallspacetop">
+						<p class="smaller">
+							<span class="copyright">© </span> Copyright &nbsp;2015 &nbsp;视频之家 &nbsp;jj.948500953</a>.Timu</p>
+					</div>
+					<!-- right -->
+					<div class="span8 smallspacetop">
+
+						<div class="pull-right smaller">
+							<ul class="footermenu">
+								<% for(let item in data){ %>
+								<li><a href="/sort/<%= data[item].ID %>"><%= data[item].tname %></a></li>
+								<% } %>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="/js/jquery.js"></script>
+	<script src="/js/bootstrap.js"></script>
+	<script src="/js/plugins.js"></script>
+	<script src="/js/custom.js"></script>
+	<script>
+		jQuery(function () {
+			jQuery('#camera_wrap_4').camera({
+				height: 'auto',
+				loader: 'bar',
+				pagination: false,
+				thumbnails: false,
+				hover: true,
+				opacityOnGrid: false,
+				fx: 'random',
+				transPeriod: 1500,
+				time: 7000,
+				overlayer: true,
+				imagePath: 'img/'
+			});
+		});
+	</script>
+	<script type="text/javascript">
+		$(window).load(function () {
+			$('#recent-projects').carouFredSel({
+				responsive: true,
+				width: '100%',
+				auto: true,
+				circular: true,
+				infinite: false,
+				prev: {
+					button: "#car_prev",
+					key: "left",
+				},
+				next: {
+					button: "#car_next",
+					key: "right",
+				},
+				swipe: {
+					onMouse: true,
+					onTouch: true
+				},
+				scroll: 1500,
+				items: {
+					visible: {
+						min: 1,
+						max: 1
+					}
+				}
+			});
+		});	
+	</script>
+	<script type="text/javascript">
+		$(".accordion h3").eq(0).addClass("active");
+		$(".accordion .accord_cont").eq(0).show();
+		$(".accordion h3").click(function () {
+			$(this).next(".accord_cont").slideToggle("slow")
+				.siblings(".accord_cont:visible").slideUp("slow");
+			$(this).toggleClass("active");
+			$(this).siblings("h3").removeClass("active");
+		});	
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("img.imgOpa").hover(function () {
+				$(this).stop().animate({ opacity: "0.6" }, 'slow');
+			},
+				function () {
+					$(this).stop().animate({ opacity: "1.0" }, 'slow');
+				});
+		});
+	</script>
+	
+	
+</body>
+
+</html>

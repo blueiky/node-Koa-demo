@@ -1,0 +1,148 @@
+<!doctype html>
+<html class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MovieHome后台登录</title>
+    <link rel="shortcut icon" href="/fonts/favicon.ico" type="image/x-icon">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <link rel="stylesheet" href="/css/jigsaw.css">
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script src="/js/jigsaw.js"></script>
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .content {
+            width: 310px;
+            position: absolute;
+            top: 200px;
+            left: 50px;
+            background-color: #fff;
+            z-index: 999;
+        }
+
+        input {
+            display: block;
+            width: 290px;
+            line-height: 40px;
+            margin: 10px 0;
+            padding: 0 10px;
+            outline: none;
+            border: 1px solid #c8cccf;
+            border-radius: 4px;
+            color: #6a6f77;
+        }
+
+        #msg {
+            width: 100%;
+            line-height: 40px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        a:link,
+        a:visited,
+        a:hover,
+        a:active {
+            margin-left: 100px;
+            color: #0366D6;
+        }
+    </style>
+</head>
+
+<body class="login-bg">
+
+    <div class="login layui-anim layui-anim-up">
+        <div class="message">MovieHome管理登录</div>
+        <div id="darkbannerwrap"></div>
+
+        <div class="content">
+            <div id="captcha" style="position: relative"></div>
+        </div>
+
+        <form method="post" class="layui-form" id="loginForm">
+            <input name="username" placeholder="用户名" type="text" class="layui-input">
+            <hr class="hr15">
+            <input name="password" placeholder="密码" type="password" class="layui-input">
+            <hr class="hr15">
+            <input type="checkbox" name="remlogin" lay-skin="primary" title="记住账户">
+            <input type="checkbox" name="autologin" lay-skin="primary" title="自动登录" checked="">
+
+            <hr class="hr15">
+            <input value="登录" lay-submit lay-filter="login" style="width:100%;" type="button">
+            <hr class="hr20">
+        </form>
+
+    </div>
+
+    <script>
+        $(function () {
+            var remuser;
+            var remuserkt;
+            layui.use('form', function () {
+                var form = layui.form;
+                //监听提交
+                form.on('submit(login)', function (data) {
+                    let { username, password, remlogin, autologin } = data.field;
+                    let usereg = /^.{3,32}$/;
+                    let passreg = /^.{4,32}$/;
+                    if (!usereg.test(username) || username == '') {
+                        layer.msg('请输入3-32个字符的用户名', function () {
+                            $('#loginForm')[0].reset();
+                            layui.form.render();
+                        })
+                        return false
+                    }
+                    if (!passreg.test(password) || password == '') {
+                        layer.msg('请输入4-32个字符的密码', function () {
+                            $('#loginForm')[0].reset();
+                            layui.form.render();
+                        })
+                        return false
+                    }
+                    jigsaw.init(document.getElementById('captcha'), function () {
+                        $.ajax({
+                            url: '/admin/login',
+                            type: 'POST',
+                            data: {
+                                username,
+                                password,
+                                remlogin,
+                                autologin
+                            },
+                            success: function (d) {
+                                var data = JSON.parse(d)
+                                if (data.islogin == 'false') {
+                                    layer.alert(data.error, {
+                                        yes: function () {
+                                            location = '/admin/login'
+                                            location.reload();
+                                        }
+                                    })
+                                }else{
+                                    sessionStorage.setItem('adminuser', data.userdata)
+                                    remuserkt = sessionStorage.getItem('adminuser');
+                                    sessionStorage.setItem('username', data.user)
+                                    remuser = sessionStorage.getItem('username');
+                                    location = '/admin'
+                                }
+                            }
+                        });
+                    });
+                });
+                
+            });
+        })
+    </script>
+    <!-- 底部结束 -->
+</body>
+
+</html>
